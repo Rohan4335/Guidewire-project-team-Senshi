@@ -214,7 +214,7 @@ food delivery workers.
 
 <hr>
 
-<h3>3.2 AI Risk Assessment Module (Enhanced)</h3>
+<h3>3.2 AI Risk Assessment Module </h3>
 
 <p><b>Inputs:</b></p>
 <ul>
