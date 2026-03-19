@@ -249,7 +249,7 @@ Risk Score =
 
 <hr>
 
-<h3>3.3 Weekly Premium Calculation (Enhanced)</h3>
+<h3>3.3 Weekly Premium Calculation </h3>
 
 <pre>
 Premium = Base Price × Risk Multiplier × Coverage Factor
@@ -282,7 +282,7 @@ Premium = Base Price × Risk Multiplier × Coverage Factor
 
 <hr>
 
-<h3>3.5 Automated Claims Processing (Enhanced)</h3>
+<h3>3.5 Automated Claims Processing </h3>
 
 <pre>
 IF rainfall > 50mm AND worker is active
@@ -305,7 +305,7 @@ Monitoring → Condition Match → Claim Generated → Payout Initiated
 
 <hr>
 
-<h3>3.7 Instant Payout System (Enhanced)</h3>
+<h3>3.7 Instant Payout System </h3>
 
 <pre>
 Payout = Fixed Amount × Severity Factor
