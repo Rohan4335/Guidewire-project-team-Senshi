@@ -1,5 +1,6 @@
-<h1 align="center">AI-Powered Parametric Insurance Platform</h1>
-<h3 align="center">Software Requirements Specification (SRS)</h3>
+<h1 align="center">giGuard</h1>
+<h3 align="center">AI-Powered Parametric Insurance Platform</h3>
+<h4 align="center">Software Requirements Specification (SRS)</h4>
 <h4 align="center">For Food Delivery Workers (Swiggy / Zomato / Blinkit)</h4>
 
 <hr>
@@ -133,20 +134,13 @@ that integrates with external data sources to detect disruption events affecting
 food delivery workers.
 </p>
 
-<p>The system interacts with:</p>
-
 <ul>
 <li>Weather APIs</li>
 <li>Pollution monitoring APIs</li>
 <li>Location services</li>
 <li>Payment gateways</li>
-<li>AI risk analysis models</li>
+<li>AI risk analysis models / scoring system</li>
 </ul>
-
-<p>
-When disruption conditions are detected, the system automatically triggers
-insurance claims and processes payouts.
-</p>
 
 <hr>
 
@@ -198,32 +192,11 @@ insurance claims and processes payouts.
 <h3>2.4 Operating Environment</h3>
 
 <table border="1" cellpadding="8">
-
-<tr>
-<th>Component</th>
-<th>Technology</th>
-</tr>
-
-<tr>
-<td>Frontend</td>
-<td>Web / Mobile Application</td>
-</tr>
-
-<tr>
-<td>Backend</td>
-<td>Cloud Server</td>
-</tr>
-
-<tr>
-<td>Database</td>
-<td>SQL / NoSQL</td>
-</tr>
-
-<tr>
-<td>External APIs</td>
-<td>Weather API, AQI API, Maps API, Payment API</td>
-</tr>
-
+<tr><th>Component</th><th>Technology</th></tr>
+<tr><td>Frontend</td><td>Web / Mobile Application</td></tr>
+<tr><td>Backend</td><td>Cloud Server</td></tr>
+<tr><td>Database</td><td>SQL / NoSQL</td></tr>
+<tr><td>External APIs</td><td>Weather API, AQI API, Maps API, Payment API</td></tr>
 </table>
 
 <hr>
@@ -232,12 +205,6 @@ insurance claims and processes payouts.
 
 <h3>3.1 Worker Registration Module</h3>
 
-<p>
-Allows food delivery workers to create accounts and enroll in the insurance platform.
-</p>
-
-<p><b>Inputs:</b></p>
-
 <ul>
 <li>Phone number</li>
 <li>Delivery platform name</li>
@@ -245,56 +212,60 @@ Allows food delivery workers to create accounts and enroll in the insurance plat
 <li>Identity verification</li>
 </ul>
 
-<p><b>Outputs:</b></p>
+<hr>
+
+<h3>3.2 AI Risk Assessment Module (Enhanced)</h3>
+
+<p><b>Inputs:</b></p>
+<ul>
+<li>Weather data (rain, heat, storms)</li>
+<li>Location (urban / highway / risk zones)</li>
+<li>Time (night = higher risk)</li>
+<li>Delivery frequency (fatigue factor)</li>
+<li>Historical data (if available)</li>
+</ul>
+
+<p><b>Model Approach:</b></p>
+<ul>
+<li>Pre-trained models / APIs OR weighted scoring system</li>
+</ul>
+
+<p><b>Risk Score:</b></p>
+
+<pre>
+Risk Score =
+(0.30 × Weather Risk) +
+(0.25 × Location Risk) +
+(0.20 × Time Risk) +
+(0.15 × Delivery Load) +
+(0.10 × User History)
+</pre>
 
 <ul>
-<li>Verified worker account</li>
-<li>User profile stored in database</li>
+<li>Low Risk (0–30)</li>
+<li>Medium Risk (31–70)</li>
+<li>High Risk (71–100)</li>
 </ul>
 
 <hr>
 
-<h3>3.2 AI Risk Assessment Module</h3>
+<h3>3.3 Weekly Premium Calculation (Enhanced)</h3>
 
-<p>
-This module analyzes environmental risks using machine learning models.
-</p>
+<pre>
+Premium = Base Price × Risk Multiplier × Coverage Factor
+</pre>
 
 <ul>
-<li>Historical weather data</li>
-<li>Pollution levels</li>
-<li>Flood-prone areas</li>
-<li>Disruption frequency</li>
+<li>Base Price = ₹50/day</li>
+<li>Risk Multiplier: Low(1.0), Medium(1.5), High(2.2)</li>
+<li>Coverage Factor: Basic(1.0), Premium(1.8)</li>
 </ul>
-
-<p>The system generates a <b>risk score</b> for each delivery zone.</p>
-
-<hr>
-
-<h3>3.3 Weekly Premium Calculation</h3>
 
 <table border="1" cellpadding="8">
-
-<tr>
-<th>Risk Level</th>
-<th>Weekly Premium</th>
-</tr>
-
-<tr>
-<td>Low Risk</td>
-<td>₹10</td>
-</tr>
-
-<tr>
-<td>Medium Risk</td>
-<td>₹20</td>
-</tr>
-
-<tr>
-<td>High Risk</td>
-<td>₹35</td>
-</tr>
-
+<tr><th>Risk</th><th>Basic</th><th>Premium</th></tr>
+<tr><td>Low</td><td>₹50</td><td>₹90</td></tr>
+<tr><td>Medium</td><td>₹75</td><td>₹135</td></tr>
+<tr><td>High</td><td>₹110</td><td>₹198</td></tr>
 </table>
 
 <hr>
@@ -302,46 +273,24 @@ This module analyzes environmental risks using machine learning models.
 <h3>3.4 Parametric Event Monitoring</h3>
 
 <table border="1" cellpadding="8">
-
-<tr>
-<th>Event</th>
-<th>Trigger Condition</th>
-</tr>
-
-<tr>
-<td>Heavy Rain</td>
-<td>Rainfall above threshold</td>
-</tr>
-
-<tr>
-<td>Heatwave</td>
-<td>Temperature above safe limit</td>
-</tr>
-
-<tr>
-<td>Severe Pollution</td>
-<td>AQI above critical level</td>
-</tr>
-
-<tr>
-<td>Curfew</td>
-<td>Government movement restrictions</td>
-</tr>
-
+<tr><th>Event</th><th>Trigger Condition</th></tr>
+<tr><td>Heavy Rain</td><td>Rainfall > 50mm</td></tr>
+<tr><td>Heatwave</td><td>Temperature > 45°C</td></tr>
+<tr><td>Severe Pollution</td><td>AQI above critical level</td></tr>
+<tr><td>Curfew</td><td>Government restrictions</td></tr>
 </table>
 
 <hr>
 
-<h3>3.5 Automated Claims Processing</h3>
+<h3>3.5 Automated Claims Processing (Enhanced)</h3>
 
 <pre>
-Disruption Detected
-      ↓
-Eligible Workers Identified
-      ↓
-Claim Generated Automatically
-      ↓
-Payment Processed
+IF rainfall > 50mm AND worker is active
+→ Claim auto-triggered
+</pre>
+
+<pre>
+Monitoring → Condition Match → Claim Generated → Payout Initiated
 </pre>
 
 <hr>
@@ -356,21 +305,27 @@ Payment Processed
 
 <hr>
 
-<h3>3.7 Instant Payout System</h3>
+<h3>3.7 Instant Payout System (Enhanced)</h3>
 
 <pre>
-Average hourly earning = ₹120
-Lost working hours = 4
-
-Total payout = ₹480
+Payout = Fixed Amount × Severity Factor
 </pre>
 
-<p>Payments processed using:</p>
+<table border="1" cellpadding="8">
+<tr><th>Condition</th><th>Severity</th><th>Payout</th></tr>
+<tr><td>Light Rain</td><td>Low</td><td>₹100</td></tr>
+<tr><td>Heavy Rain</td><td>Medium</td><td>₹300</td></tr>
+<tr><td>Extreme Weather</td><td>High</td><td>₹700</td></tr>
+</table>
+
+<pre>
+Detect → Trigger → Calculate → Transfer
+</pre>
 
 <ul>
 <li>UPI</li>
-<li>Razorpay sandbox</li>
-<li>Stripe sandbox</li>
+<li>Razorpay</li>
+<li>Stripe</li>
 </ul>
 
 <hr>
@@ -378,7 +333,6 @@ Total payout = ₹480
 <h3>3.8 Dashboard System</h3>
 
 <h4>Worker Dashboard</h4>
-
 <ul>
 <li>Active insurance coverage</li>
 <li>Weekly premium details</li>
@@ -387,7 +341,6 @@ Total payout = ₹480
 </ul>
 
 <h4>Admin Dashboard</h4>
-
 <ul>
 <li>Policy statistics</li>
 <li>Claim analytics</li>
@@ -399,29 +352,13 @@ Total payout = ₹480
 
 <h2>4. Non-Functional Requirements</h2>
 
-<h3>Performance</h3>
 <ul>
 <li>Real-time disruption detection</li>
 <li>Fast claim processing</li>
-</ul>
-
-<h3>Security</h3>
-<ul>
 <li>Encrypted user data</li>
-<li>Secure payment gateway integration</li>
-<li>Fraud detection mechanisms</li>
-</ul>
-
-<h3>Scalability</h3>
-<ul>
-<li>Support thousands of delivery workers</li>
-<li>Operate across multiple cities</li>
-</ul>
-
-<h3>Reliability</h3>
-<ul>
+<li>Secure payment gateways</li>
+<li>Scalable system</li>
 <li>High availability</li>
-<li>Minimal downtime</li>
 </ul>
 
 <hr>
@@ -433,15 +370,15 @@ Food Delivery Worker App
         │
 Backend Server (API Layer)
         │
-AI Risk & Fraud Engine
+Risk Engine
         │
-Weather API | AQI API | Location API | Payment API
+External APIs
         │
-Parametric Trigger Engine
+Trigger Engine
         │
-Automatic Claim Processing
+Claim Processing
         │
-Instant Payout System
+Payout System
 </pre>
 
 <hr>
@@ -449,14 +386,114 @@ Instant Payout System
 <h2>6. Conclusion</h2>
 
 <p>
-The AI-Powered Parametric Insurance Platform provides an innovative solution
-to protect food delivery workers from income loss caused by environmental disruptions.
+giGuard provides a <b>realistic, automated, and scalable insurance solution</b>
+for gig workers using parametric triggers and AI-assisted risk analysis.
 </p>
 
-<p>
-By combining <b>AI-driven risk analysis, automated claim triggers, and instant payouts</b>,
-the system ensures fast and transparent financial protection for gig economy workers.
-</p>
+<hr>
+
+<h2>7. Use Case Diagram</h2>
+
+<pre>
+Actors:
+- Worker
+- Admin
+
+Use Cases:
+- Register/Login
+- Buy Insurance
+- View Risk Score
+- Receive Claim
+- View Payout
+- Admin Monitoring
+- Fraud Detection
+</pre>
+
+<hr>
+
+<h2>8. System Workflow</h2>
+
+<pre>
+User Active
+   ↓
+System Monitors Data
+   ↓
+Condition Triggered
+   ↓
+Claim Generated
+   ↓
+Payout Calculated
+   ↓
+Money Transferred
+</pre>
+
+<hr>
+
+<h2>9. Database Design</h2>
+
+<h4>Users</h4>
+<ul>
+<li>UserID</li>
+<li>Name</li>
+<li>Phone</li>
+<li>Platform</li>
+<li>Location</li>
+</ul>
+
+<h4>Policies</h4>
+<ul>
+<li>PolicyID</li>
+<li>UserID</li>
+<li>Risk Level</li>
+<li>Premium</li>
+<li>Coverage</li>
+</ul>
+
+<h4>Claims</h4>
+<ul>
+<li>ClaimID</li>
+<li>UserID</li>
+<li>Event</li>
+<li>Payout</li>
+<li>Status</li>
+</ul>
+
+<hr>
+
+<h2>10. API Design</h2>
+
+<ul>
+<li>POST /register</li>
+<li>POST /login</li>
+<li>GET /risk-score</li>
+<li>POST /buy-policy</li>
+<li>GET /claims</li>
+<li>POST /trigger-claim</li>
+<li>POST /payout</li>
+</ul>
+
+<hr>
+
+<h2>11. Security Measures</h2>
+
+<ul>
+<li>JWT Authentication</li>
+<li>Encrypted data</li>
+<li>Secure payments</li>
+<li>Fraud detection</li>
+</ul>
+
+<hr>
+
+<h2>12. Future Scope</h2>
+
+<ul>
+<li>Integration with Swiggy/Zomato APIs</li>
+<li>Blockchain transparency</li>
+<li>IoT accident detection</li>
+<li>Mobile app</li>
+<li>Expansion to Uber/Rapido</li>
+</ul>
 
 <hr>
 
