@@ -9,492 +9,319 @@
 
 <h3>1.1 Purpose</h3>
 <p>
-This document provides the <b>Software Requirements Specification (SRS)</b> for the
-AI-Powered Parametric Insurance Platform designed to protect <b>food delivery workers</b>
-from income loss caused by external disruptions such as extreme weather, pollution,
-or government restrictions.
+This document defines the functional and non-functional requirements of giGuard,
+a parametric insurance system designed to provide automated income protection
+to gig delivery workers using real-time environmental data and AI-based decision systems.
 </p>
 
-<p>The goal of the system is to:</p>
-
 <ul>
-<li>Provide income protection for gig workers</li>
-<li>Detect disruption events automatically</li>
-<li>Use AI-based risk assessment for premium calculation</li>
-<li>Trigger automated insurance claims</li>
-<li>Provide instant payouts</li>
-<li>Prevent fraudulent claims</li>
+<li>Detect disruptions using real-world signals</li>
+<li>Calculate risk using measurable parameters</li>
+<li>Automatically trigger claims</li>
+<li>Ensure fraud-resistant payouts</li>
 </ul>
 
 <hr>
 
 <h3>1.2 Scope</h3>
 
-<p>
-The proposed system is an <b>AI-powered parametric insurance platform</b>
-designed specifically for food delivery workers working on platforms such as:
-</p>
-
 <ul>
-<li>Swiggy</li>
-<li>Zomato</li>
-<li>Blinkit</li>
-<li>Zepto</li>
+<li>Heavy rainfall disruption</li>
+<li>Extreme temperature conditions</li>
+<li>Severe pollution</li>
+<li>Government restrictions</li>
 </ul>
 
-<p>
-Food delivery workers depend on daily deliveries for income. External disruptions
-such as heavy rain, heatwaves, pollution, or curfews may prevent them from working.
-The system compensates workers for income lost during such disruptions.
-</p>
-
-<p><b>Key features include:</b></p>
-
+<p><b>Out of Scope:</b></p>
 <ul>
-<li>Worker registration and onboarding</li>
-<li>AI-based risk assessment</li>
-<li>Weekly premium calculation</li>
-<li>Parametric disruption monitoring</li>
-<li>Automatic claim generation</li>
-<li>Fraud detection system</li>
-<li>Instant payout processing</li>
-<li>Worker and admin dashboards</li>
-</ul>
-
-<p><b>Coverage Limitations:</b></p>
-
-<ul>
-<li>Health insurance is not included</li>
-<li>Accident insurance is not included</li>
-<li>Vehicle repair coverage is not included</li>
+<li>Medical insurance</li>
+<li>Accident coverage</li>
+<li>Vehicle damage</li>
 </ul>
 
 <hr>
 
-<h3>1.3 Definitions, Acronyms, and Abbreviations</h3>
+<h3>1.3 Definitions</h3>
 
-<table border="1" cellpadding="8">
-<tr>
-<th>Term</th>
-<th>Description</th>
-</tr>
-
-<tr>
-<td>SRS</td>
-<td>Software Requirements Specification</td>
-</tr>
-
-<tr>
-<td>AI</td>
-<td>Artificial Intelligence</td>
-</tr>
-
-<tr>
-<td>Gig Worker</td>
-<td>Worker paid per task or delivery</td>
-</tr>
-
-<tr>
-<td>Parametric Insurance</td>
-<td>Insurance triggered automatically when predefined conditions occur</td>
-</tr>
-
-<tr>
-<td>Disruption Event</td>
-<td>External event preventing delivery work</td>
-</tr>
-
-<tr>
-<td>AQI</td>
-<td>Air Quality Index</td>
-</tr>
-
+<table border="1">
+<tr><th>Term</th><th>Description</th></tr>
+<tr><td>Parametric Insurance</td><td>Automatic payout based on predefined triggers</td></tr>
+<tr><td>Risk Score</td><td>Disruption likelihood (0–100)</td></tr>
+<tr><td>Fraud Score</td><td>Suspicious activity probability (0–100)</td></tr>
 </table>
 
 <hr>
 
-<h3>1.4 References</h3>
+<h2>2. System Overview</h2>
+
+<h3>2.1 Architecture</h3>
+
+<pre>
+User App
+   ↓
+API Layer
+   ↓
+Risk Engine + Fraud Engine
+   ↓
+Trigger Engine
+   ↓
+Claim Processor
+   ↓
+Payout System
+</pre>
+
+<hr>
+
+<h3>2.2 External APIs</h3>
 
 <ul>
-<li>IEEE 830 Software Requirements Specification Standard</li>
-<li>IEEE 29148 Systems and Software Engineering Requirements Standard</li>
-<li>Gig Economy Research Reports</li>
-<li>Weather and Environmental Monitoring APIs</li>
+<li>Weather API (rainfall, temperature)</li>
+<li>AQI API (pollution levels)</li>
+<li>Maps API (route validation)</li>
+<li>Payment Gateway (UPI)</li>
 </ul>
 
 <hr>
 
-<h2>2. Overall Description</h2>
+<h2>3. Detailed System Features</h2>
 
-<h3>2.1 Product Perspective</h3>
-
-<p>
-The proposed system is a <b>cloud-based web/mobile platform</b>
-that integrates with external data sources to detect disruption events affecting
-food delivery workers.
-</p>
-
-<ul>
-<li>Weather APIs</li>
-<li>Pollution monitoring APIs</li>
-<li>Location services</li>
-<li>Payment gateways</li>
-<li>AI risk analysis models / scoring system</li>
-</ul>
-
-<hr>
-
-<h3>2.2 Product Functions</h3>
-
-<ol>
-<li>Worker registration and verification</li>
-<li>AI-based risk profiling</li>
-<li>Weekly insurance premium calculation</li>
-<li>Insurance policy management</li>
-<li>Real-time disruption monitoring</li>
-<li>Automated claim generation</li>
-<li>Fraud detection</li>
-<li>Instant payout processing</li>
-<li>Worker and admin dashboards</li>
-</ol>
-
-<hr>
-
-<h3>2.3 User Classes and Characteristics</h3>
-
-<h4>Food Delivery Workers (Primary Users)</h4>
-
-<ul>
-<li>Work on gig-based delivery platforms</li>
-<li>Income depends on number of deliveries</li>
-<li>Affected by environmental disruptions</li>
-</ul>
-
-<p><b>Responsibilities:</b></p>
-
-<ul>
-<li>Register on the platform</li>
-<li>Purchase weekly insurance coverage</li>
-<li>Receive automatic compensation during disruptions</li>
-</ul>
-
-<h4>Insurance Administrator</h4>
-
-<ul>
-<li>Monitor policies</li>
-<li>Analyze disruption data</li>
-<li>Detect fraud</li>
-<li>Manage claims and payouts</li>
-</ul>
-
-<hr>
-
-<h3>2.4 Operating Environment</h3>
-
-<table border="1" cellpadding="8">
-<tr><th>Component</th><th>Technology</th></tr>
-<tr><td>Frontend</td><td>Web / Mobile Application</td></tr>
-<tr><td>Backend</td><td>Cloud Server</td></tr>
-<tr><td>Database</td><td>SQL / NoSQL</td></tr>
-<tr><td>External APIs</td><td>Weather API, AQI API, Maps API, Payment API</td></tr>
-</table>
-
-<hr>
-
-<h2>3. System Features</h2>
-
-<h3>3.1 Worker Registration Module</h3>
-
-<ul>
-<li>Phone number</li>
-<li>Delivery platform name</li>
-<li>Working location</li>
-<li>Identity verification</li>
-</ul>
-
-<hr>
-
-<h3>3.2 AI Risk Assessment Module </h3>
+<h3>3.1 Worker Registration</h3>
 
 <p><b>Inputs:</b></p>
 <ul>
-<li>Weather data (rain, heat, storms)</li>
-<li>Location (urban / highway / risk zones)</li>
-<li>Time (night = higher risk)</li>
-<li>Delivery frequency (fatigue factor)</li>
-<li>Historical data (if available)</li>
+<li>Platform type</li>
+<li>Operating region (city-level)</li>
+<li>Device verification token</li>
 </ul>
 
-<p><b>Model Approach:</b></p>
-<ul>
-<li>Pre-trained models / APIs OR weighted scoring system</li>
-</ul>
+<p><b>Output:</b> System-generated user ID</p>
 
-<p><b>Risk Score:</b></p>
+<hr>
+
+<h3>3.2 Risk Prediction</h3>
 
 <pre>
 Risk Score =
 (0.30 × Weather Risk) +
 (0.25 × Location Risk) +
 (0.20 × Time Risk) +
-(0.15 × Delivery Load) +
-(0.10 × User History)
+(0.15 × Load Risk) +
+(0.10 × History Risk)
 </pre>
 
-<ul>
-<li>Low Risk (0–30)</li>
-<li>Medium Risk (31–70)</li>
-<li>High Risk (71–100)</li>
-</ul>
+<p><b>Example:</b></p>
+<pre>
+Weather=80, Location=70, Time=60, Load=50, History=40
+Risk Score = 65 (Medium Risk)
+</pre>
 
 <hr>
 
-<h3>3.3 Weekly Premium Calculation </h3>
+<h3>3.3 Premium Calculation</h3>
 
 <pre>
-Premium = Base Price × Risk Multiplier × Coverage Factor
+Premium = Base × Risk Multiplier × Coverage Factor
 </pre>
 
 <ul>
-<li>Base Price = ₹50/day</li>
-<li>Risk Multiplier: Low(1.0), Medium(1.5), High(2.2)</li>
-<li>Coverage Factor: Basic(1.0), Premium(1.8)</li>
+<li>Base = ₹50</li>
+<li>Risk Multiplier = 1.0 / 1.5 / 2.2</li>
+<li>Coverage = 1.0 / 1.8</li>
 </ul>
 
-<table border="1" cellpadding="8">
-<tr><th>Risk</th><th>Basic</th><th>Premium</th></tr>
-<tr><td>Low</td><td>₹50</td><td>₹90</td></tr>
-<tr><td>Medium</td><td>₹75</td><td>₹135</td></tr>
-<tr><td>High</td><td>₹110</td><td>₹198</td></tr>
+<p><b>Example:</b></p>
+<pre>
+Premium = 50 × 1.5 × 1.8 = ₹135/day
+</pre>
+
+<hr>
+
+<h3>3.4 Event Monitoring</h3>
+
+<table border="1">
+<tr><th>Event</th><th>Threshold</th></tr>
+<tr><td>Rain</td><td>>50mm</td></tr>
+<tr><td>Heat</td><td>>45°C</td></tr>
+<tr><td>Pollution</td><td>AQI > 300</td></tr>
 </table>
 
 <hr>
 
-<h3>3.4 Parametric Event Monitoring</h3>
+<h3>3.5 Claim Logic</h3>
 
-<table border="1" cellpadding="8">
-<tr><th>Event</th><th>Trigger Condition</th></tr>
-<tr><td>Heavy Rain</td><td>Rainfall > 50mm</td></tr>
-<tr><td>Heatwave</td><td>Temperature > 45°C</td></tr>
-<tr><td>Severe Pollution</td><td>AQI above critical level</td></tr>
-<tr><td>Curfew</td><td>Government restrictions</td></tr>
+<pre>
+IF (event_triggered == TRUE)
+AND (user_active == TRUE)
+AND (fraud_score < 60)
+→ APPROVE CLAIM
+</pre>
+
+<hr>
+
+<h3>3.6 Payout Logic</h3>
+
+<table border="1">
+<tr><th>Severity</th><th>Payout</th></tr>
+<tr><td>Low</td><td>₹100</td></tr>
+<tr><td>Medium</td><td>₹300</td></tr>
+<tr><td>High</td><td>₹700</td></tr>
 </table>
 
 <hr>
 
-<h3>3.5 Automated Claims Processing </h3>
-
-<pre>
-IF rainfall > 50mm AND worker is active
-→ Claim auto-triggered
-</pre>
-
-<pre>
-Monitoring → Condition Match → Claim Generated → Payout Initiated
-</pre>
-
-<hr>
-
-<h3>3.6 Fraud Detection System</h3>
-
-<ul>
-<li>GPS spoofing detection</li>
-<li>Duplicate claim detection</li>
-<li>False location reporting prevention</li>
-</ul>
-
-<hr>
-
-<h3>3.7 Instant Payout System </h3>
-
-<pre>
-Payout = Fixed Amount × Severity Factor
-</pre>
-
-<table border="1" cellpadding="8">
-<tr><th>Condition</th><th>Severity</th><th>Payout</th></tr>
-<tr><td>Light Rain</td><td>Low</td><td>₹100</td></tr>
-<tr><td>Heavy Rain</td><td>Medium</td><td>₹300</td></tr>
-<tr><td>Extreme Weather</td><td>High</td><td>₹700</td></tr>
-</table>
-
-<pre>
-Detect → Trigger → Calculate → Transfer
-</pre>
-
-<ul>
-<li>UPI</li>
-<li>Razorpay</li>
-<li>Stripe</li>
-</ul>
-
-<hr>
-
-<h3>3.8 Dashboard System</h3>
-
-<h4>Worker Dashboard</h4>
-<ul>
-<li>Active insurance coverage</li>
-<li>Weekly premium details</li>
-<li>Claim history</li>
-<li>Payout records</li>
-</ul>
-
-<h4>Admin Dashboard</h4>
-<ul>
-<li>Policy statistics</li>
-<li>Claim analytics</li>
-<li>Fraud alerts</li>
-<li>Disruption monitoring</li>
-</ul>
-
-<hr>
-
-<h2>4. Non-Functional Requirements</h2>
-
-<ul>
-<li>Real-time disruption detection</li>
-<li>Fast claim processing</li>
-<li>Encrypted user data</li>
-<li>Secure payment gateways</li>
-<li>Scalable system</li>
-<li>High availability</li>
-</ul>
-
-<hr>
-
-<h2>5. System Architecture</h2>
-
-<pre>
-Food Delivery Worker App
-        │
-Backend Server (API Layer)
-        │
-Risk Engine
-        │
-External APIs
-        │
-Trigger Engine
-        │
-Claim Processing
-        │
-Payout System
-</pre>
-
-<hr>
-
-<h2>6. Conclusion</h2>
-
-<p>
-giGuard provides a <b>realistic, automated, and scalable insurance solution</b>
-for gig workers using parametric triggers and AI-assisted risk analysis.
-</p>
-
-<hr>
-
-<h2>7. Use Case Diagram</h2>
-
-<pre>
-Actors:
-- Worker
-- Admin
-
-Use Cases:
-- Register/Login
-- Buy Insurance
-- View Risk Score
-- Receive Claim
-- View Payout
-- Admin Monitoring
-- Fraud Detection
-</pre>
-
-<hr>
-
-<h2>8. System Workflow</h2>
+<h3>3.7 System Workflow</h3>
 
 <pre>
 User Active
    ↓
-System Monitors Data
+System Monitors APIs
    ↓
-Condition Triggered
+Event Triggered
    ↓
-Claim Generated
+Fraud Check
    ↓
-Payout Calculated
+Claim Decision
    ↓
-Money Transferred
+Payout Transfer
 </pre>
 
 <hr>
 
-<h2>9. Database Design</h2>
+<h2>4. Adversarial Defense & Anti-Spoofing Strategy</h2>
 
-<h4>Users</h4>
+<h3>4.1 Differentiation</h3>
+
 <ul>
-<li>UserID</li>
-<li>Name</li>
-<li>Phone</li>
-<li>Platform</li>
-<li>Location</li>
+<li>Continuous motion tracking vs static spoof</li>
+<li>Speed anomaly detection</li>
+<li>Route validation with maps</li>
+<li>Cluster anomaly detection</li>
 </ul>
 
-<h4>Policies</h4>
+<h3>4.2 Multi-Signal Data</h3>
+
 <ul>
-<li>PolicyID</li>
-<li>UserID</li>
-<li>Risk Level</li>
-<li>Premium</li>
-<li>Coverage</li>
+<li>Sensor data (accelerometer)</li>
+<li>Network consistency</li>
+<li>Device integrity signals</li>
+<li>Historical activity pattern</li>
 </ul>
 
-<h4>Claims</h4>
+<h3>4.3 Fraud Score</h3>
+
+<pre>
+Fraud Score =
+(0.30 × Movement Anomaly) +
+(0.20 × Location Consistency) +
+(0.20 × Device Integrity) +
+(0.15 × Network) +
+(0.15 × Behavior)
+</pre>
+
+<hr>
+
+<h3>4.4 Decision System</h3>
+
 <ul>
-<li>ClaimID</li>
-<li>UserID</li>
-<li>Event</li>
-<li>Payout</li>
-<li>Status</li>
+<li>Low → Auto approve</li>
+<li>Medium → Soft verification</li>
+<li>High → Flag for review</li>
 </ul>
 
 <hr>
 
-<h2>10. API Design</h2>
+<h2>5. Database Design (Structured)</h2>
 
+<h4>Users Table</h4>
 <ul>
-<li>POST /register</li>
-<li>POST /login</li>
-<li>GET /risk-score</li>
-<li>POST /buy-policy</li>
-<li>GET /claims</li>
-<li>POST /trigger-claim</li>
-<li>POST /payout</li>
+<li>user_id (Primary Key)</li>
+<li>platform_type</li>
+<li>region_code</li>
+<li>risk_score</li>
+<li>fraud_score</li>
+</ul>
+
+<h4>Policies Table</h4>
+<ul>
+<li>policy_id</li>
+<li>user_id</li>
+<li>risk_level</li>
+<li>premium_amount</li>
+<li>coverage_type</li>
+</ul>
+
+<h4>Claims Table</h4>
+<ul>
+<li>claim_id</li>
+<li>user_id</li>
+<li>event_type</li>
+<li>payout_amount</li>
+<li>status</li>
+</ul>
+
+<h4>Fraud Logs</h4>
+<ul>
+<li>log_id</li>
+<li>user_id</li>
+<li>fraud_score</li>
+<li>decision</li>
 </ul>
 
 <hr>
 
-<h2>11. Security Measures</h2>
+<h2>6. API Design (Detailed)</h2>
 
+<p><b>POST /register</b></p>
 <ul>
-<li>JWT Authentication</li>
-<li>Encrypted data</li>
-<li>Secure payments</li>
-<li>Fraud detection</li>
+<li>Input: platform_type, region_code</li>
+<li>Output: user_id, status</li>
+</ul>
+
+<p><b>GET /risk-score</b></p>
+<ul>
+<li>Input: user_id</li>
+<li>Output: risk_score</li>
+</ul>
+
+<p><b>POST /buy-policy</b></p>
+<ul>
+<li>Input: user_id, coverage_type</li>
+<li>Output: policy_id</li>
+</ul>
+
+<p><b>POST /claim</b></p>
+<ul>
+<li>Input: user_id, event_type</li>
+<li>Output: claim_status</li>
+</ul>
+
+<p><b>POST /payout</b></p>
+<ul>
+<li>Input: claim_id</li>
+<li>Output: transaction_status</li>
 </ul>
 
 <hr>
 
-<h2>12. Future Scope</h2>
+<h2>7. Non-Functional Requirements</h2>
 
 <ul>
-<li>Integration with Swiggy/Zomato APIs</li>
-<li>Blockchain transparency</li>
-<li>IoT accident detection</li>
-<li>Mobile app</li>
-<li>Expansion to Uber/Rapido</li>
+<li>Response time < 2 seconds</li>
+<li>99.9% uptime</li>
+<li>AES-256 encryption</li>
+<li>Horizontal scalability</li>
 </ul>
 
 <hr>
 
-<h3 align="center">Protecting the Income of Food Delivery Workers</h3>
+<h2>8. Future Scope</h2>
+
+<ul>
+<li>Blockchain-based claims transparency</li>
+<li>IoT-based detection</li>
+<li>Expansion to ride-sharing platforms</li>
+</ul>
+
+<hr>
+
+<h3 align="center">giGuard — Smart Protection for Gig Workers</h3>
