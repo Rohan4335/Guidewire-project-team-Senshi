@@ -27,7 +27,7 @@ to gig delivery workers using real-time environmental data and AI-based decision
 
 <ul>
 <li>Heavy rainfall disruption</li>
-<li>Extreme temperature conditions</li>
+<li>Extreme temperature conditions (heatwaves & cold waves)</li>
 <li>Severe pollution</li>
 <li>Government restrictions</li>
 </ul>
@@ -48,6 +48,7 @@ to gig delivery workers using real-time environmental data and AI-based decision
 <tr><td>Parametric Insurance</td><td>Automatic payout based on predefined triggers</td></tr>
 <tr><td>Risk Score</td><td>Disruption likelihood (0–100)</td></tr>
 <tr><td>Fraud Score</td><td>Suspicious activity probability (0–100)</td></tr>
+<tr><td>Confidence Score</td><td>Reliability of collected data (0–100)</td></tr>
 </table>
 
 <hr>
@@ -87,7 +88,6 @@ Payout System
 
 <h3>3.1 Worker Registration</h3>
 
-<p><b>Inputs:</b></p>
 <ul>
 <li>Platform type</li>
 <li>Operating region (city-level)</li>
@@ -125,8 +125,8 @@ Premium = Base × Risk Multiplier × Coverage Factor
 
 <ul>
 <li>Base = ₹50</li>
-<li>Risk Multiplier = 1.0 / 1.5 / 2.2</li>
-<li>Coverage = 1.0 / 1.8</li>
+<li>Risk Multiplier = Low(1.0), Medium(1.5), High(2.2)</li>
+<li>Coverage = Basic(1.0), Premium(1.8)</li>
 </ul>
 
 <p><b>Example:</b></p>
@@ -140,11 +140,13 @@ Premium = 50 × 1.5 × 1.8 = ₹135/day
 
 <table border="1">
 <tr><th>Event</th><th>Threshold</th></tr>
-<tr><td>Rain</td><td>>50mm</td></tr>
-<tr><td>Heat</td><td>>45°C</td></tr>
-<tr><td>cold</td><td>< -1°C</td></tr>
-<tr><td>Pollution</td><td>AQI > 600</td></tr>
+<tr><td>Heavy Rain</td><td>> 50mm</td></tr>
+<tr><td>Heatwave</td><td>> 45°C</td></tr>
+<tr><td>Cold Wave</td><td>< -1°C</td></tr>
+<tr><td>Severe Pollution</td><td>AQI > 300</td></tr>
 </table>
+
+<p><b>Note:</b> All environmental data must be real-time (&lt; 5 minutes old).</p>
 
 <hr>
 
@@ -154,8 +156,11 @@ Premium = 50 × 1.5 × 1.8 = ₹135/day
 IF (event_triggered == TRUE)
 AND (user_active == TRUE)
 AND (fraud_score < 60)
+AND (confidence_score > 50)
 → APPROVE CLAIM
 </pre>
+
+<p><b>Fallback Rule:</b> If data is incomplete, delay claim instead of rejecting.</p>
 
 <hr>
 
@@ -179,9 +184,9 @@ System Monitors APIs
    ↓
 Event Triggered
    ↓
-Fraud Check
+Fraud + Confidence Check
    ↓
-Claim Decision
+Decision Engine
    ↓
 Payout Transfer
 </pre>
@@ -190,43 +195,108 @@ Payout Transfer
 
 <h2>4. Adversarial Defense & Anti-Spoofing Strategy</h2>
 
-<h3>4.1 Differentiation</h3>
+<h3>4.1 Multi-Layer Location Verification</h3>
 
 <ul>
-<li>Continuous motion tracking vs static spoof</li>
-<li>Speed anomaly detection</li>
-<li>Route validation with maps</li>
-<li>Cluster anomaly detection</li>
+<li>GPS + Accelerometer + Gyroscope validation</li>
+<li>Device integrity checks (Play Integrity API / DeviceCheck)</li>
+<li>IP-based geolocation verification</li>
 </ul>
 
-<h3>4.2 Multi-Signal Data</h3>
+<h3>4.2 Behavioral Anomaly Detection</h3>
 
 <ul>
-<li>Sensor data (accelerometer)</li>
-<li>Network consistency</li>
-<li>Device integrity signals</li>
-<li>Historical activity pattern</li>
+<li>Movement pattern tracking</li>
+<li>Claim frequency monitoring</li>
+<li>Inactivity detection during movement</li>
 </ul>
 
-<h3>4.3 Fraud Score</h3>
+<h3>4.3 Fraud Ring Detection</h3>
+
+<ul>
+<li>Cluster detection (same location/time)</li>
+<li>Shared network/device patterns</li>
+<li>Graph-based anomaly detection</li>
+</ul>
+
+<h3>4.4 Device Fingerprinting</h3>
+
+<ul>
+<li>Unique non-PII device ID</li>
+<li>Detect multiple accounts on same device</li>
+<li>Detect emulator/virtual environments</li>
+</ul>
+
+<h3>4.5 Session & Activity Monitoring</h3>
+
+<ul>
+<li>Foreground/background app state</li>
+<li>User interaction patterns</li>
+<li>Session continuity validation</li>
+</ul>
+
+<h3>4.6 Time Synchronization Check</h3>
+
+<ul>
+<li>Compare device time with server time</li>
+<li>Detect time manipulation</li>
+</ul>
+
+<h3>4.7 Rate Limiting</h3>
+
+<ul>
+<li>Maximum 2 claims per day</li>
+<li>Cooldown period: 6 hours</li>
+</ul>
+
+<h3>4.8 Fraud Score</h3>
 
 <pre>
 Fraud Score =
 (0.30 × Movement Anomaly) +
 (0.20 × Location Consistency) +
 (0.20 × Device Integrity) +
-(0.15 × Network) +
-(0.15 × Behavior)
+(0.15 × Network Signals) +
+(0.15 × Behavior Pattern)
 </pre>
 
-<hr>
-
-<h3>4.4 Decision System</h3>
+<h3>4.9 Confidence Score</h3>
 
 <ul>
-<li>Low → Auto approve</li>
-<li>Medium → Soft verification</li>
-<li>High → Flag for review</li>
+<li>GPS accuracy</li>
+<li>Sensor availability</li>
+<li>Network reliability</li>
+</ul>
+
+<h3>4.10 Decision System</h3>
+
+<ul>
+<li>Low Risk → Instant payout</li>
+<li>Medium Risk → Delayed verification</li>
+<li>High Risk → Manual review</li>
+</ul>
+
+<h3>4.11 Fallback Mechanisms</h3>
+
+<ul>
+<li>Use historical trust score if sensors fail</li>
+<li>Allow delayed verification for network issues</li>
+<li>Do not auto-reject due to missing data</li>
+</ul>
+
+<h3>4.12 Explainability</h3>
+
+<ul>
+<li>Provide reasons for claim decisions</li>
+<li>Example: "No movement detected + High fraud score"</li>
+</ul>
+
+<h3>4.13 Audit Logging</h3>
+
+<ul>
+<li>Store all claim decisions</li>
+<li>Log fraud reasoning</li>
+<li>Maintain traceability</li>
 </ul>
 
 <hr>
@@ -240,6 +310,7 @@ Fraud Score =
 <li>region_code</li>
 <li>risk_score</li>
 <li>fraud_score</li>
+<li>confidence_score</li>
 </ul>
 
 <h4>Policies Table</h4>
@@ -266,6 +337,7 @@ Fraud Score =
 <li>user_id</li>
 <li>fraud_score</li>
 <li>decision</li>
+<li>reason</li>
 </ul>
 
 <hr>
