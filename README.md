@@ -142,7 +142,8 @@ Premium = 50 × 1.5 × 1.8 = ₹135/day
 <tr><th>Event</th><th>Threshold</th></tr>
 <tr><td>Rain</td><td>>50mm</td></tr>
 <tr><td>Heat</td><td>>45°C</td></tr>
-<tr><td>Pollution</td><td>AQI > 300</td></tr>
+<tr><td>cold</td><td>< -1°C</td></tr>
+<tr><td>Pollution</td><td>AQI > 600</td></tr>
 </table>
 
 <hr>
