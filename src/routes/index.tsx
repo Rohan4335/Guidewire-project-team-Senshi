@@ -1,6 +1,6 @@
-
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import MainLayout from '../components/layout/MainLayout';
+import ProtectedRoute from '../components/common/ProtectedRoute';
 import Login from '../pages/Login';
 import Registration from '../pages/Registration';
 import Dashboard from '../pages/Dashboard';
@@ -19,8 +19,16 @@ const router = createBrowserRouter([
   },
   {
     path: '/',
-    element: <MainLayout />,
+    element: (
+      <ProtectedRoute>
+        <MainLayout />
+      </ProtectedRoute>
+    ),
     children: [
+      {
+        index: true,
+        element: <Navigate to="/dashboard" replace />,
+      },
       {
         path: 'dashboard',
         element: <Dashboard />,
@@ -37,10 +45,6 @@ const router = createBrowserRouter([
         path: 'premium',
         element: <PremiumDetails />,
       },
-      {
-        path: '',
-        element: <Dashboard />,
-      }
     ],
   },
 ]);
