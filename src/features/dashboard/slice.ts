@@ -1,6 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../services/api';
+import { apiService } from '../../services/api-enhanced.service';
+import { loggerService } from '../../services/logger.service';
+import { cacheService } from '../../services/cache.service';
 import type { DashboardState } from '../../types';
+
+const DASHBOARD_CACHE_KEY = 'dashboard_data';
 
 const initialState: DashboardState = {
   data: null,
@@ -12,11 +16,30 @@ export const fetchDashboard = createAsyncThunk(
   'dashboard/fetch',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get('/dashboard');
-      return response.data.data;
+      // Check cache first
+      const cachedData = cacheService.get(DASHBOARD_CACHE_KEY);
+      if (cachedData) {
+        loggerService.debug('Returning cached dashboard data');
+        return cachedData;
+      }
+
+      loggerService.debug('Fetching dashboard data from API');
+      const response = await apiService.request({
+        method: 'GET',
+        url: '/dashboard',
+      });
+      
+      const data = response.data;
+      
+      // Cache the data
+      cacheService.set(DASHBOARD_CACHE_KEY, data, 300000); // 5 minutes
+      
+      loggerService.info('Dashboard data fetched successfully');
+      return data;
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { error?: string } } };
-      return rejectWithValue(error.response?.data?.error || 'Failed to load dashboard');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load dashboard';
+      loggerService.error('Dashboard fetch error:', { error: errorMessage });
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -43,3 +66,4 @@ const dashboardSlice = createSlice({
 });
 
 export default dashboardSlice.reducer;
+

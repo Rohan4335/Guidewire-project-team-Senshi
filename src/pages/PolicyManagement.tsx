@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useAppDispatch } from '../hooks/useAppDispatch';
 import { useAppSelector } from '../hooks/useAppSelector';
 import { fetchPolicies } from '../features/policy/slice';
@@ -7,6 +7,7 @@ import Badge from '../components/ui/Badge';
 import RiskGauge from '../components/ui/RiskGauge';
 import Spinner from '../components/ui/Spinner';
 import Button from '../components/ui/Button';
+import { getInsightIcon, getLevelVariant } from '../utils/riskHelpers';
 
 const PolicyManagement: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -38,41 +39,6 @@ const PolicyManagement: React.FC = () => {
   }
 
   if (!data) return null;
-
-  const getInsightIcon = (icon: string) => {
-    switch (icon) {
-      case 'rain':
-        return (
-          <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
-            <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-blue-500">
-              <path d="M12 2C8.13 2 5 5.13 5 9C5 13.17 9.42 18.92 11.24 21.11C11.64 21.59 12.37 21.59 12.77 21.11C14.58 18.92 19 13.17 19 9C19 5.13 15.87 2 12 2Z" fill="currentColor"/>
-            </svg>
-          </div>
-        );
-      case 'aqi':
-        return (
-          <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0">
-            <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-amber-500">
-              <path d="M4 10H8V20H4V10ZM10 4H14V20H10V4ZM16 13H20V20H16V13Z" fill="currentColor"/>
-            </svg>
-          </div>
-        );
-      default:
-        return (
-          <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
-            <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-[#6C3AED]">
-              <path d="M16 6L18.29 8.29L13.41 13.17L9.41 9.17L2 16.59L3.41 18L9.41 12L13.41 16L19.71 9.71L22 12V6H16Z" fill="currentColor"/>
-            </svg>
-          </div>
-        );
-    }
-  };
-
-  const getLevelVariant = (level: string) => {
-    if (level.toLowerCase().includes('high')) return 'high';
-    if (level.toLowerCase().includes('moderate')) return 'moderate';
-    return 'info';
-  };
 
   return (
     <div className="space-y-8">

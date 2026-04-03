@@ -6,20 +6,46 @@ import Input from '../components/ui/Input';
 import { useAppDispatch } from '../hooks/useAppDispatch';
 import { useAppSelector } from '../hooks/useAppSelector';
 import { loginUser } from '../features/auth/slice';
+import { validateField, formatPhoneNumber, phoneValidation } from '../utils/validation';
 
 const Login: React.FC = () => {
   const [phone, setPhone] = useState('');
+  const [touched, setTouched] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useAppSelector((state) => state.auth);
+  const { loading, error: apiError } = useAppSelector((state) => state.auth);
+
+  // Validate phone on change - only validate when touched
+  const phoneError = touched ? validateField(phone, phoneValidation) : null;
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPhone(formatPhoneNumber(value));
+  };
+
+  const handlePhoneBlur = () => {
+    setTouched(true);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Final validation - set touched to show errors
+    setTouched(true);
+    const error = validateField(phone, phoneValidation);
+    
+    if (error) {
+      return;
+    }
+
     const result = await dispatch(loginUser({ phone }));
     if (loginUser.fulfilled.match(result)) {
       navigate('/dashboard');
     }
   };
+
+  const isFormValid = !phoneError && phone.length === 10;
+  const displayError = phoneError || apiError;
 
   return (
     <div className="min-h-screen bg-[#F8F9FB] flex flex-col">
@@ -55,6 +81,16 @@ const Login: React.FC = () => {
             Enter your phone number to secure your weekly earnings.
           </p>
 
+          {/* Error Alert */}
+          {displayError && (
+            <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+              <svg viewBox="0 0 24 24" className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5">
+                <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+              </svg>
+              <span className="text-sm text-red-600 font-medium">{displayError}</span>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit}>
             <Input
               label="Mobile Number"
@@ -67,9 +103,10 @@ const Login: React.FC = () => {
               type="tel"
               placeholder="Enter 10 digit number"
               value={phone}
-              onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+              onChange={handlePhoneChange}
+              onBlur={handlePhoneBlur}
               maxLength={10}
-              error={error || undefined}
+              error={phoneError || undefined}
             />
 
             <p className="flex items-center gap-1.5 text-xs text-gray-400 mt-2 mb-6">
@@ -85,7 +122,7 @@ const Login: React.FC = () => {
               size="lg"
               loading={loading}
               className="w-full mb-4"
-              disabled={phone.length !== 10}
+              disabled={!isFormValid || loading}
             >
               Get OTP
               <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 ml-1">

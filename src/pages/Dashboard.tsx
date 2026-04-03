@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useAppDispatch } from '../hooks/useAppDispatch';
 import { useAppSelector } from '../hooks/useAppSelector';
 import { fetchDashboard } from '../features/dashboard/slice';
@@ -7,6 +7,7 @@ import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
 import ProgressBar from '../components/ui/ProgressBar';
 import Spinner from '../components/ui/Spinner';
+import { getRiskIcon, getRiskBadgeVariant } from '../utils/riskHelpers';
 
 const Dashboard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -38,44 +39,6 @@ const Dashboard: React.FC = () => {
   }
 
   if (!data) return null;
-
-  const getRiskBadgeVariant = (level: string) => {
-    switch (level.toLowerCase()) {
-      case 'high': return 'high';
-      case 'moderate': return 'moderate';
-      default: return 'low';
-    }
-  };
-
-  const getRiskIcon = (icon: string) => {
-    switch (icon) {
-      case 'rain':
-        return (
-          <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-            <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-blue-500">
-              <path d="M12 2C8.13 2 5 5.13 5 9C5 13.17 9.42 18.92 11.24 21.11C11.64 21.59 12.37 21.59 12.77 21.11C14.58 18.92 19 13.17 19 9C19 5.13 15.87 2 12 2Z" fill="currentColor" opacity="0.3"/>
-              <path d="M6.76 4.84L7.68 5.76C7.37 6.07 7.09 6.41 6.83 6.76L5.91 5.84C6.17 5.49 6.45 5.15 6.76 4.84Z" fill="currentColor"/>
-            </svg>
-          </div>
-        );
-      case 'aqi':
-        return (
-          <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center">
-            <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-red-500">
-              <path d="M4 10H8V20H4V10ZM10 4H14V20H10V4ZM16 13H20V20H16V13Z" fill="currentColor"/>
-            </svg>
-          </div>
-        );
-      default:
-        return (
-          <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center">
-            <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-gray-500">
-              <path d="M15 13V5C15 3.34 13.66 2 12 2C10.34 2 9 3.34 9 5V13C6.79 14.66 6.34 17.79 8 20C9.66 22.21 12.79 22.66 15 21C17.21 19.34 17.66 16.21 16 14C15.64 13.53 15.33 13.24 15 13Z" fill="currentColor"/>
-            </svg>
-          </div>
-        );
-    }
-  };
 
   return (
     <div className="space-y-6">

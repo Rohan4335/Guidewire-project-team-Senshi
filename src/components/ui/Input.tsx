@@ -1,6 +1,8 @@
 import React from 'react';
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+type InputBaseProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'prefix'>;
+
+interface InputProps extends InputBaseProps {
   label?: string;
   prefix?: React.ReactNode;
   error?: string;

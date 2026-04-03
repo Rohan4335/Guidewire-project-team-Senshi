@@ -1,6 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../services/api';
+import { apiService } from '../../services/api-enhanced.service';
+import { loggerService } from '../../services/logger.service';
+import { cacheService } from '../../services/cache.service';
 import type { ClaimsState } from '../../types';
+
+const CLAIMS_CACHE_KEY = 'claims_data';
 
 const initialState: ClaimsState = {
   data: null,
@@ -12,11 +16,30 @@ export const fetchClaims = createAsyncThunk(
   'claims/fetch',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get('/claims');
-      return response.data.data;
+      // Check cache first
+      const cachedData = cacheService.get(CLAIMS_CACHE_KEY);
+      if (cachedData) {
+        loggerService.debug('Returning cached claims data');
+        return cachedData;
+      }
+
+      loggerService.debug('Fetching claims data from API');
+      const response = await apiService.request({
+        method: 'GET',
+        url: '/claims',
+      });
+      
+      const data = response.data;
+      
+      // Cache the data
+      cacheService.set(CLAIMS_CACHE_KEY, data, 300000); // 5 minutes
+      
+      loggerService.info('Claims data fetched successfully');
+      return data;
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { error?: string } } };
-      return rejectWithValue(error.response?.data?.error || 'Failed to load live triggers');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load live triggers';
+      loggerService.error('Claims fetch error:', { error: errorMessage });
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -43,3 +66,4 @@ const claimsSlice = createSlice({
 });
 
 export default claimsSlice.reducer;
+

@@ -5,10 +5,11 @@ const router = express.Router();
 
 // GET /api/premium
 router.get('/', (req, res) => {
-  // Adjust premium based on location risk
-  const zone = zones[0]; // Default to first zone
-  let riskMultiplier = 1.0;
+  // Determine zone and risk multiplier based on query
+  const zoneId = req.query.zoneId;
+  const zone = zones.find((z) => z.id === zoneId) || zones[0];
 
+  let riskMultiplier = 1.0;
   if (zone.riskLevel === 'High Risk') {
     riskMultiplier = 1.3;
   } else if (zone.riskLevel === 'Moderate Risk') {
@@ -22,15 +23,19 @@ router.get('/', (req, res) => {
     price: Math.round(plan.price * riskMultiplier),
   }));
 
+  const selectedPlan = adjustedPlans.find((p) => p.isSelected);
+  const selectedPrice = selectedPlan ? selectedPlan.price : premiumData.subscriptionSummary.weeklyTotal;
+
   return res.json({
     success: true,
     data: {
       ...premiumData,
+      location: `${zone.name}, ${zone.city}`,
       plans: adjustedPlans,
       subscriptionSummary: {
         ...premiumData.subscriptionSummary,
-        weeklyTotal: adjustedPlans.find((p) => p.isSelected)?.price || premiumData.subscriptionSummary.weeklyTotal,
-        gst: parseFloat((((adjustedPlans.find((p) => p.isSelected)?.price || 59) * 0.18) / 1.18).toFixed(2)),
+        weeklyTotal: selectedPrice,
+        gst: parseFloat(((selectedPrice * 0.18) / 1.18).toFixed(2)),
       },
     },
   });
