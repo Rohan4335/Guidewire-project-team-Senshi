@@ -8,9 +8,11 @@ const dashboardRoutes = require('./routes/dashboard');
 const claimsRoutes = require('./routes/claims');
 const policiesRoutes = require('./routes/policies');
 const premiumRoutes = require('./routes/premium');
+const { sanitizeBody } = require('./middleware/sanitize');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5173';
 
 // ============ Security Middleware ============
 // Add security headers
@@ -18,7 +20,7 @@ app.use(helmet());
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.CORS_ORIGIN?.split(',') || [
+  origin: CORS_ORIGIN ? CORS_ORIGIN.split(',').map(url => url.trim()) : [
     'http://localhost:5173',
     'http://localhost:5174',
     'http://localhost:3000'
@@ -26,11 +28,15 @@ app.use(cors({
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['X-Total-Count', 'X-Page-Count'],
 }));
 
-// Body parser middleware
+// Body parser middleware with increased limit for production
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
+// Input sanitization middleware
+app.use(sanitizeBody);
 
 // ============ Rate Limiting ============
 // Global rate limiter
@@ -94,26 +100,50 @@ app.use((req, res) => {
 
 // ============ Global Error Handler ============
 app.use((err, req, res, next) => {
-  console.error('Error:', {
-    message: err.message,
-    stack: err.stack,
-    method: req.method,
-    path: req.path,
-    body: req.body,
-  });
-
-  const status = err.status || 500;
+  const isDevelopment = process.env.NODE_ENV !== 'production';
+  const status = err.status || err.statusCode || 500;
   const message = err.message || 'Internal server error';
 
-  res.status(status).json({
-    success: false,
-    error: message,
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+  console.error('Error:', {
+    message,
+    status,
+    ...(isDevelopment && { stack: err.stack }),
+    method: req.method,
+    path: req.path,
+    timestamp: new Date().toISOString(),
   });
+
+  // Don't expose error stack in production
+  const response = {
+    success: false,
+    error: isDevelopment ? message : 'An error occurred. Please try again later.',
+    status,
+  };
+
+  if (isDevelopment && err.stack) {
+    response.stack = err.stack;
+  }
+
+  res.status(status).json(response);
+});
+
+// ============ Graceful Shutdown ============
+process.on('SIGTERM', () => {
+  console.log('SIGTERM signal received: closing HTTP server');
+  process.exit(0);
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT signal received: closing HTTP server');
+  process.exit(0);
 });
 
 app.listen(PORT, () => {
-  console.log(`🛡️  GiGuard API Server running on http://localhost:${PORT}`);
-  console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔒 Security: Helmet enabled, Rate limiting active`);
+  console.log(`
+🛡️  GiGuard API Server
+📍 Running on http://localhost:${PORT}
+📝 Environment: ${process.env.NODE_ENV || 'development'}
+🔒 Security: Helmet enabled, Rate limiting active
+CORS: ${CORS_ORIGIN || 'Multiple origins configured'}
+  `);
 });

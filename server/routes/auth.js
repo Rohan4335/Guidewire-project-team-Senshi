@@ -103,7 +103,7 @@ router.post('/login', validatePhone, handleValidationErrors, (req, res) => {
     console.error('Login error:', error);
     return res.status(500).json({
       success: false,
-      error: 'Failed to process login request',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Failed to process login request',
     });
   }
 });
@@ -161,7 +161,31 @@ router.post('/register', validateRegistration, handleValidationErrors, (req, res
     console.error('Registration error:', error);
     return res.status(500).json({
       success: false,
-      error: 'Failed to process registration request',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Failed to process registration request',
+    });
+  }
+});
+
+// POST /api/auth/logout
+router.post('/logout', (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (token && tokens[token]) {
+      delete tokens[token];
+      console.log('User logout successful');
+    }
+
+    return res.json({
+      success: true,
+      message: 'Logged out successfully',
+    });
+  } catch (error) {
+    console.error('Logout error:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to process logout request',
     });
   }
 });
